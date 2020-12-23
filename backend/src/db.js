@@ -1,16 +1,17 @@
 // module
-var mysql = require('mysql2');
+let mysql = require('mysql2');
 
 //créer la connection
-var connection = mysql.createConnection({
+let connection = mysql.createConnection({
     host: '127.0.0.1',
     user: 'root',
     password: '',
-    database: "village d'ici"
+    database: "village"
 });
 
 // connection
 connection.connect(function (err) {
+    console.log(err);
     if (err) throw err;
 });
 
