@@ -4,10 +4,6 @@ const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt');
 
 
-
-
-
-
 const saltRounds = 10;
 const yourPassword = "someRandomPasswordHere";
 
@@ -74,7 +70,7 @@ routes.post('/SignIn', function (req, res) {
 // Ajouter une annonce
 
 routes.post('/AddAction', function (req, res) {
-    let add = `INSERT INTO actions (nom_action, lieu, date_debute, date_fin) VALUES ('${req.body.non_action}','${req.body.lieu}','${req.body.date_debut}','${req.body.date_fin}')`;
+    let add = `INSERT INTO actions (nom_action, lieu, date_debut, date_fin) VALUES ('${req.body.nom_action}','${req.body.lieu}','${req.body.date_debut}','${req.body.date_fin}')`
     db.query(add, function (err, result) {
         if (err) res.send(err)
         else res.send(result)
@@ -87,24 +83,67 @@ routes.post('/AddAction', function (req, res) {
 routes.get('/GetAction', function (req, res) {
     let aff = `SELECT * FROM actions`
     db.query(aff, function (err, result) {
+        if (err) console.log(err)
+        res.send(result)
+    })
+});
+
+// Modifier une Action 
+
+routes.put('/ModAction/:id', function (req, res) {
+let mod = `UPDATE actions
+SET nom_action = '${req.body.nom_action}', lieu  = '${req.body.lieu}', 
+date_debut = '${req.body.date_debut}', date_fin = '${req.body.date_fin}'
+WHERE id= ${req.params.id}`
+db.query(mod, function (err, result) {
+    if (err) console.log(err)
+    res.send(result)
+})
+})
+
+
+// supprimer une annonces
+
+routes.delete('/DeleteAction/:id', function (req, res) {
+    let del = `DELETE FROM actions WHERE id = ${req.params.id}`
+    db.query(del, function (err, result) {
+        if (err) throw err;
+        else res.send('bien supprimé')
+
+    })
+});
+
+
+// Faite un Don
+
+routes.post('/AddDon', function (req, res) {
+    let don = `INSERT INTO dons (nom, prenom, montant, date_don, user_affilier) VALUES ('${req.body.nom}','${req.body.prenom}','${req.body.montant}','${req.body.date_don}','${req.body.user_affilier}')`
+    db.query(don, function (err, result) {
+        if (err) res.send(err)
+        else res.send(result)
+    })
+});
+
+// Afficher les dons
+
+routes.get('/GetDon', function (req, res) {
+    let aff = `SELECT * FROM dons`
+    db.query(aff, function (err, result) {
         // console.log(result)
         if (err) console.log(err)
         res.send(result)
     })
 });
 
-// supprimer une annonces
+// supprimer un don 
 
+routes.delete('/DeleteDon/:id', function (req, res) {
+    let del = `DELETE FROM dons WHERE id = ${req.params.id}`
 
-routes.delete('/DeleteAction', function (req, res){
-    let del = "DELETE FROM actions WHERE id = '1"
-    db.query(del, function (err, result){
-      if(err) throw err;
-      console.log('bien supprimé')
+    db.query(del, function (err, result) {
+        if (err) throw err;
+        else res.send('bien supprimé')
     })
-  })
-
-
-
+});
 
 module.exports = routes
