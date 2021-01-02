@@ -14,7 +14,7 @@ const db = require('../db');
 
 // Ajouter un utilisateur ==> /Sign-Up
 
-routes.post('/SignUp', function (req, res) {
+routes.post('/SignupForm', function (req, res) {
     console.log(req.body)
 
     // hash password
@@ -36,7 +36,7 @@ routes.post('/SignUp', function (req, res) {
 
 // Controle si l'utilisateur est enregistré ==> /Sign-in
 
-routes.post('/SignIn', function (req, res) {
+routes.post('/SigninForm', function (req, res) {
     let sql = `SELECT * FROM users where email = "${req.body.email}"`
     db.query(sql, function (err, result) {
         console.log(result)

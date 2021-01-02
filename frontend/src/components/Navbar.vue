@@ -1,6 +1,9 @@
 <template>
   <div>
-  <b-navbar toggleable="lg" type="dark" variant="info">
+                <div class="text-center">
+        <img src="../../public/img/logo.jpeg" class="rounded m-2" alt="..." width="80%" height="400px" />
+      </div> 
+  <b-navbar toggleable="lg"  variant="info" class="bg-white">
     <b-navbar-brand href="#"> VIA </b-navbar-brand>
 
     <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>

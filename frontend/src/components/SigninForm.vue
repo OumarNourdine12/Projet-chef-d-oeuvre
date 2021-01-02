@@ -1,103 +1,79 @@
 <template>
-  <form id="signin-form" v-on:submit.prevent="submit">
-    <div class="row">
-      <div class="col-12 form-group">
-        <label class="col-form-label col-form-label-lg"
-          >Email <span class="text-danger">*</span></label
-        >
-        <input
-          type="email"
-          v-model.trim="$v.email.$model"
-          :class="{ 'is-invalid': validationStatus($v.email) }"
-          class="form-control form-control-lg"
-        />
-        <div v-if="!$v.email.required" class="invalid-feedback">
-          The email field is required.
-        </div>
-        <div v-if="!$v.email.email" class="invalid-feedback">
-          The email is not valid.
-        </div>
-      </div>
+  <div class="signin-form">
+    <b-container>
+      <b-row class="justify-content-md-conter" cols="10">
+        <b-col style="margin-top: 25vh" cols="6">
+          <h2>LOGIN</h2>
+          <b-form @submit="onSubmit" @reset="onReset" v-f="show">
+            <b-form-groupe id="input-group-1" label="User:" label-for="input-1">
+              <b-form-input
+                id="input-1"
+                v-model="form.user"
+                type="text"
+                required
+                placeholder="Entre User"
+              >
+              </b-form-input>
+            </b-form-groupe>
 
-      <div class="col-12 form-group">
-        <label class="col-form-label col-form-label-lg"
-          >Password <span class="text-danger">*</span></label
-        >
-        <input
-          type="password"
-          v-model.trim="$v.password.$model"
-          :class="{ 'is-invalid': validationStatus($v.password) }"
-          class="form-control form-control-lg"
-        />
-        <div v-if="!$v.password.required" class="invalid-feedback">
-          The password field is required.
-        </div>
-        <div v-if="!$v.password.minLength" class="invalid-feedback">
-          You must have at least
-          {{ $v.password.$params.minLength.min }} letters.
-        </div>
-        <div v-if="!$v.password.maxLength" class="invalid-feedback">
-          You must not have greater then
-          {{ $v.password.$params.maxLength.min }} letters.
-        </div>
-      </div>
-    </div>
-  </form>
+            <b-form-group
+              id="input-group-2"
+              label="Password:"
+              label-for="input-2"
+            >
+              <b-form-input
+                id="input-2"
+                v-model="form.password"
+                type="password"
+                required
+                placeholder="Entre Password"
+              >
+              </b-form-input>
+            </b-form-group>
+
+            <b-button type="submit" class="mr-4" variant="primary">
+              Submit
+            </b-button>
+            <b-button type="rest" variant="danger"> Reset </b-button>
+            <h6 class="tex_danger mt-4" v-if="con">INVALID USER OR PASSWORD</h6>
+            <h6 class="mt-4">VILLAGE D'ICI ET D'AILLEURS</h6>
+          </b-form>
+        </b-col>
+      </b-row>
+    </b-container>
+  </div>
 </template>
 
-
-
 <script>
-import axios from "axios";
-import jwt from "jsonwebtoken";
-
 export default {
-  name: "SignIn",
-
+  name: "SigninForm",
   data() {
     return {
       form: {
-        email: "",
+        user: "",
         password: "",
       },
+      show: true,
+      con: false,
     };
   },
   methods: {
     onSubmit(evt) {
       evt.preventDefault();
-      axios
-        .post("http://localhost:3000/SignIn", this.form)
-        .then( async(response) => {
-        localStorage.setItem("jwt", response.data);
-    
-
-          this.form = response;
-        
-
-          // alert(JSON.stringify(this.form))
-          // this.$router.push('/')
-
-          var decode = await jwt.decode(response.data);
-         await localStorage.setItem("decodetoken", decode)
-          console.log('decode isdmin=')
-          console.log(decode.is_admin);
-          if (decode.is_admin == 1) {
-            this.$router.push("/");
-          } else {
-            this.$router.push("/");
-          }
-        })
-
-        .catch(function (error) {
-          console.log(error.response.data);
-        });
+      if (this.form.user == "admin" && this.form.password == "123456") {
+        this.$router.push("/");
+      } else {
+        this.con = true;
+      }
     },
     onReset(evt) {
       evt.preventDefault();
       // Reset our form values
-      this.form.email = "";
+
+      this.form.user = "";
       this.form.password = "";
-      // Trick to reset/clear native browser form validation state
+      this.con = false;
+      //  reset/clear native broser form validation state
       this.show = false;
       this.$nextTick(() => {
         this.show = true;
@@ -106,7 +82,3 @@ export default {
   },
 };
 </script>
-
-
-<style scoped>
-</style>

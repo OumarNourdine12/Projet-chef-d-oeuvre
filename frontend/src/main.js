@@ -11,6 +11,12 @@ import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap-vue/dist/bootstrap-vue.css'
 
 
+
+// import VuePlaceAutocomplete from 'vue-place-autocomplete';
+// Vue.use(VuePlaceAutocomplete);
+
+
+
 Vue.config.productionTip = false
 Vue.use(BootstrapVue)
 Vue.use(IconsPlugin)

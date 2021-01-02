@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home'
 import SignupForm from '../components/SignupForm'
+import SigninForm from '../components/SigninForm'
 
 
 
@@ -26,7 +27,11 @@ const routes = [
     name: 'SignupForm',
     component: SignupForm
   },
-
+  {
+    path: '/SigninForm',
+    name: 'SigninForm',
+    component: SigninForm
+  },
 
   
   

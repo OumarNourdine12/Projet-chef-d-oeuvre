@@ -35,12 +35,15 @@
       </b-Carousel-slide>
       <b-Carousel-slide>
         <template v-slot:img>
+
+          <p class="text-center text-dark w-75 margin-auto" >Lorem ipsum dolor sit amet, consectetur adipisicing elit. Molestias in repudiandae odio delectus sunt, praesentium reiciendis aut id commodi possimus. Magnam esse explicabo laboriosam veritatis quod, dolorum excepturi doloremque culpa.</p>
           <img
-            class="d-block img-fluid w-100"
+            class="d-block img-fluid w-100 position-relative"
             style="height: 80vh !important"
             src="https://media.istockphoto.com/photos/flock-of-sheeps-grazing-in-green-farm-in-new-zealand-picture-id1061151616"
             alt="image slot"
-          >
+          > 
+          
         </template>
       </b-Carousel-slide>
     </b-Carousel>

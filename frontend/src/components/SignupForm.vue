@@ -1,5 +1,10 @@
 <template>
-  <form id="signup-form" v-on:submit.prevent="submit">
+<div class="container d-flex">
+  <div class="container">
+    <img src="../../public/img/logo.jpeg" alt="logo" width="50%" height="50%">
+  </div>
+<div class="container "  style="height:80vh; overflow-x:scroll;">
+  <form id="signup-form card" v-on:submit.prevent="submit">
     <div class="row">
       <div class="col-12 form-group">
         <label class="col-form-label col-form-label-lg">
@@ -388,7 +393,16 @@
         <button class="btn btn-vue btn-lg col-4">Sign Up</button>
       </div>
     </div>
-  </form>
+<!-- 
+    <div v-if="field1" class="alert alert-info">
+    Current Value: {{field1}}
+</div>
+
+<place-autocomplete-field v-model="field1" placeholder="Enter an an address, zipcode, or location" label="Address" name="field1" api-key="AIzaSyAhSv9zWvisiTXRPRw6K8AE0DCmrRMpQcU"></place-autocomplete-field>
+     -->
+  </form> 
+</div>
+</div>
 </template>
 
 
@@ -454,7 +468,7 @@ export default {
   mounted: function() {
         var v = this;
         // v.$http.get(`http://localhost:4600/countries`)
-         v.$http.get(`http://localhost:3000/countries`)
+         v.$http.post(`http://localhost:3000/SignupForm`)
         .then(function(resp) {
             v.countryList = resp.data;
         })
@@ -466,4 +480,15 @@ export default {
 };
 </script>
 
-
+<style>
+#app {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  color: #2c3e50;
+}
+.vue-bg {
+  background: #bce5d0;
+}
+</style>
