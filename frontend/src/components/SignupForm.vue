@@ -97,7 +97,7 @@
           Code Postal <span class="text-danger">*</span></label
         >
         <input
-          type="text"
+          type="number"
           v-model.trim="$v.codepostal.$model"
           :class="{ 'is-invalid': validationStatus($v.codepostal) }"
           class="form-control form-control-lg"
@@ -128,7 +128,7 @@
         <select v-model.trim="$v.country.$model" :class="{ 'is-invalid': validationStatus($v.country) }" 
         class="form-control form-control-lg">
           <option value="">Select Country</option>
-          <option :value="c.iso" :key="c.iso" v-for="c in countryList">{{ c.country }}</option>
+          <!-- <option :value="c.iso" :key="c.iso" v-for="c in countryList">{{ c.country }}</option> -->
              
           <option value="Afganistan">Afghanistan</option>
           <option value="Albania">Albania</option>
@@ -137,7 +137,7 @@
           <option value="Andorra">Andorra</option>
           <option value="Angola">Angola</option>
           <option value="Anguilla">Anguilla</option>
-          <option value="Antigua & Barbuda">Antigua & Barbuda</option>
+          <option value="Antigua and Barbuda">Antigua and Barbuda</option>
           <option value="Argentina">Argentina</option>
           <option value="Armenia">Armenia</option>
           <option value="Aruba">Aruba</option>
@@ -156,7 +156,7 @@
           <option value="Bhutan">Bhutan</option>
           <option value="Bolivia">Bolivia</option>
           <option value="Bonaire">Bonaire</option>
-          <option value="Bosnia & Herzegovina">Bosnia & Herzegovina</option>
+          <option value="Bosnia and Herzegovina">Bosnia and Herzegovina</option>
           <option value="Botswana">Botswana</option>
           <option value="Brazil">Brazil</option>
           <option value="British Indian Ocean Ter">
@@ -322,15 +322,15 @@
           <option value="St Kitts-Nevis">St Kitts-Nevis</option>
           <option value="St Lucia">St Lucia</option>
           <option value="St Maarten">St Maarten</option>
-          <option value="St Pierre & Miquelon">St Pierre & Miquelon</option>
-          <option value="St Vincent & Grenadines">
-            St Vincent & Grenadines
+          <option value="St Pierre and Miquelon">St Pierre and Miquelon</option>
+          <option value="St Vincent and Grenadines">
+            St Vincent and Grenadines
           </option>
           <option value="Saipan">Saipan</option>
           <option value="Samoa">Samoa</option>
           <option value="Samoa American">Samoa American</option>
           <option value="San Marino">San Marino</option>
-          <option value="Sao Tome & Principe">Sao Tome & Principe</option>
+          <option value="Sao Tome and Principe">Sao Tome and Principe</option>
           <option value="Saudi Arabia">Saudi Arabia</option>
           <option value="Senegal">Senegal</option>
           <option value="Seychelles">Seychelles</option>
@@ -357,11 +357,11 @@
           <option value="Togo">Togo</option>
           <option value="Tokelau">Tokelau</option>
           <option value="Tonga">Tonga</option>
-          <option value="Trinidad & Tobago">Trinidad & Tobago</option>
+          <option value="Trinidad and Tobago">Trinidad and Tobago</option>
           <option value="Tunisia">Tunisia</option>
           <option value="Turkey">Turkey</option>
           <option value="Turkmenistan">Turkmenistan</option>
-          <option value="Turks & Caicos Is">Turks & Caicos Is</option>
+          <option value="Turks and Caicos Is">Turks and Caicos Is</option>
           <option value="Tuvalu">Tuvalu</option>
           <option value="Uganda">Uganda</option>
           <option value="United Kingdom">United Kingdom</option>
@@ -379,7 +379,7 @@
           <option value="Virgin Islands (Brit)">Virgin Islands (Brit)</option>
           <option value="Virgin Islands (USA)">Virgin Islands (USA)</option>
           <option value="Wake Island">Wake Island</option>
-          <option value="Wallis & Futana Is">Wallis & Futana Is</option>
+          <option value="Wallis and Futana Is">Wallis and Futana Is</option>
           <option value="Yemen">Yemen</option>
           <option value="Zaire">Zaire</option>
           <option value="Zambia">Zambia</option>
@@ -421,7 +421,7 @@ export default {
       adresse: "",
       codepostal: "",
       ville: "",
-      pays: "",
+      country: "",
       countryList: [],
     };
   },
@@ -453,28 +453,43 @@ export default {
       this.adresse = '';
       this.codepostal = '';
       this.ville = '';
-      this.pays = '';
+      this.country = '';
     },
 
     submit: function () {
       this.$v.$touch();
       if (this.$v.$pendding || this.$v.$error) return;
-
+      
+        var v = this;
+        
+         v.$http.post(`http://localhost:3000/SignupForm`, {
+           nom: this.nom,
+           prenom: this.prenom,
+           email : this.email,
+           password: this.password,
+           adresse: this.adresse,
+           code_postal: this.code_postal,
+           ville: this.ville,
+           pays: this.pays
+         })
+        .then(function(resp) {
+          console.log("RESPONSE => ", resp.data)
+            v.countryList = resp.data;
+        })
+        .catch(function(err) {
+            console.log(err)
+        });
+    
+      
+      
+      this.$router.push("/SigninForm");
       alert("Data Submit");
     },
 
   },
 
   mounted: function() {
-        var v = this;
-        // v.$http.get(`http://localhost:4600/countries`)
-         v.$http.post(`http://localhost:3000/SignupForm`)
-        .then(function(resp) {
-            v.countryList = resp.data;
-        })
-        .catch(function(err) {
-            console.log(err)
-        });
+        
     }
 
 };

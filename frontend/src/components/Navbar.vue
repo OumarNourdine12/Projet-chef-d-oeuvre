@@ -32,9 +32,10 @@
           <template #button-content>
             <em>Users</em>
           </template>
-          <b-dropdown-item href="#">Profile</b-dropdown-item>
-          <b-dropdown-item href="#">Sign Out</b-dropdown-item>
-           <b-dropdown-item href="#">SignIn / SignUp </b-dropdown-item>
+          <b-dropdown-item ><router-link to="/profile">Profile</router-link></b-dropdown-item>
+          <b-dropdown-item ><router-link to="/Sig Out">Sign Out</router-link></b-dropdown-item>
+          <b-dropdown-item ><router-link to="/SignupForm">SignupForm</router-link></b-dropdown-item>
+           <b-dropdown-item ><router-link to="/SigninForm"> SigninForm </router-link></b-dropdown-item>
         </b-nav-item-dropdown>
       </b-navbar-nav>
     </b-collapse>

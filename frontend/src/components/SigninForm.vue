@@ -4,17 +4,20 @@
       <b-row class="justify-content-md-conter" cols="10">
         <b-col style="margin-top: 25vh" cols="6">
           <h2>LOGIN</h2>
-          <b-form @submit="onSubmit" @reset="onReset" v-f="show">
-            <b-form-groupe id="input-group-1" label="User:" label-for="input-1">
+          <b-form @submit="onSubmit" @reset="onReset" v-if="show">
+            <b-form-group id="input-group-1" label="User:" label-for="input-1">
               <b-form-input
+              type="text"
                 id="input-1"
-                v-model="form.user"
-                type="text"
+                 v-model.trim="$v.email.$model"
+                 :class="{ 'is-invalid': validationStatus($v.email) }"
+                 class="form-control form-control-lg"
+                
                 required
-                placeholder="Entre User"
+                placeholder="Entre email"
               >
               </b-form-input>
-            </b-form-groupe>
+            </b-form-group>
 
             <b-form-group
               id="input-group-2"
@@ -23,7 +26,8 @@
             >
               <b-form-input
                 id="input-2"
-                v-model="form.password"
+                v-model.trim="$v.password.$model"
+                :class="{ 'is-invalid': validationStatus($v.passsword) }"
                 type="password"
                 required
                 placeholder="Entre Password"
@@ -45,26 +49,61 @@
 </template>
 
 <script>
+import {required, email, minLength, maxLength} from "vuelidate/lib/validators";
+
 export default {
   name: "SigninForm",
   data() {
     return {
       form: {
-        user: "",
+        email: "",
         password: "",
       },
       show: true,
       con: false,
     };
   },
+validations: {
+   
+   
+    email: { required, email },
+    password: { required, minLength: minLength(6), maxLength: maxLength(18) },
+   
+  },
+
+
   methods: {
+
+     validationStatus: function (validation) {
+      return typeof validation != "undefined" ? validation.$error : false;
+      
+
+
+    }, 
     onSubmit(evt) {
+      console.log("SUBMITED")
       evt.preventDefault();
-      if (this.form.user == "admin" && this.form.password == "123456") {
-        this.$router.push("/");
-      } else {
-        this.con = true;
-      }
+       this.$v.$touch();
+      console.log("TOUCHED")
+
+      if (this.$v.$pendding || this.$v.$error) return;
+      console.log("AFTER IF")
+        var v = this;
+        
+         v.$http.post(`http://localhost:3000/SigninForm`, {
+           email : this.email,
+           password: this.password
+          })
+          .then(function(resp) {
+          console.log("RESPONSE => ", resp.data)
+           this.$router.push("/");
+          })
+          .catch(function(err) {
+            console.log("CATCH")
+            console.log(err)
+          });
+
+
     },
     onReset(evt) {
       evt.preventDefault();

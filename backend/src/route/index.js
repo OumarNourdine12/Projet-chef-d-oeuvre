@@ -15,7 +15,7 @@ const db = require('../db');
 // Ajouter un utilisateur ==> /Sign-Up
 
 routes.post('/SignupForm', function (req, res) {
-    console.log(req.body)
+    console.log(req.body) 
 
     // hash password
 
@@ -37,7 +37,43 @@ routes.post('/SignupForm', function (req, res) {
 // Controle si l'utilisateur est enregistré ==> /Sign-in
 
 routes.post('/SigninForm', function (req, res) {
-    let sql = `SELECT * FROM users where email = "${req.body.email}"`
+
+    let sql = `SELECT * FROM users where email = '${req.body.email}'`
+    db.query(sql, function (err, result) {
+        console.log(result)
+        if (err) console.log(err)
+
+        // compare les password ::: (envoie un msg n'existe pas la condition)
+        console.log("RESULT LENGTH => ", result.length)
+        if (result.length) {
+            console.log('je suis dans le if')
+            bcrypt.compare(req.body.password, result[0].password, function (err, response) {
+                // genere le token
+                console.log('jai comparer');
+                console.log(response)
+                let token = jwt.sign({ id: result[0].id, nom: result[0].nom }, 'aj_kneun34890shyéééççunhs8891111');
+                if (response) {
+                    res.send(token)
+                }
+                else {
+                    res.status(203).send("Mot de pass incorrect")
+                }
+            });
+
+        }
+        else {
+            res.status(203).send("Email n'existe pas")
+        }
+    })
+
+
+
+
+});
+
+
+routes.post('/SigninForm/admin', function (req, res) {
+    let sql = `SELECT * FROM admin where email = "${req.body.email}"`
     db.query(sql, function (err, result) {
         console.log(result)
         if (err) console.log(err)
@@ -47,7 +83,7 @@ routes.post('/SigninForm', function (req, res) {
         if (result.length) {
             bcrypt.compare(req.body.password, result[0].password, function (err, response) {
                 // genere le token
-                let token = jwt.sign({ id: result[0].id, nom: result[0].nom }, 'aj_kneun34890shyéééççunhs8891111');
+                let token = jwt.sign({ id: result[0].id, nom: result[0].nom }, '$2a$10$0lfNBLmIF7cYh1mZXiMoz.ejoiB9INK3t/UY6NPKRy0');
                 if (response) {
                     res.send(token)
                 }
@@ -67,83 +103,8 @@ routes.post('/SigninForm', function (req, res) {
 
 });
 
-// Ajouter une annonce
-
-routes.post('/AddAction', function (req, res) {
-    let add = `INSERT INTO actions (nom_action, lieu, date_debut, date_fin) VALUES ('${req.body.nom_action}','${req.body.lieu}','${req.body.date_debut}','${req.body.date_fin}')`
-    db.query(add, function (err, result) {
-        if (err) res.send(err)
-        else res.send(result)
-    })
-});
 
 
-// Afficher les annonces 
 
-routes.get('/GetAction', function (req, res) {
-    let aff = `SELECT * FROM actions`
-    db.query(aff, function (err, result) {
-        if (err) console.log(err)
-        res.send(result)
-    })
-});
-
-// Modifier une Action 
-
-routes.put('/ModAction/:id', function (req, res) {
-let mod = `UPDATE actions
-SET nom_action = '${req.body.nom_action}', lieu  = '${req.body.lieu}', 
-date_debut = '${req.body.date_debut}', date_fin = '${req.body.date_fin}'
-WHERE id= ${req.params.id}`
-db.query(mod, function (err, result) {
-    if (err) console.log(err)
-    res.send(result)
-})
-})
-
-
-// supprimer une annonces
-
-routes.delete('/DeleteAction/:id', function (req, res) {
-    let del = `DELETE FROM actions WHERE id = ${req.params.id}`
-    db.query(del, function (err, result) {
-        if (err) throw err;
-        else res.send('bien supprimé')
-
-    })
-});
-
-
-// Faite un Don
-
-routes.post('/AddDon', function (req, res) {
-    let don = `INSERT INTO dons (nom, prenom, montant, date_don, user_affilier) VALUES ('${req.body.nom}','${req.body.prenom}','${req.body.montant}','${req.body.date_don}','${req.body.user_affilier}')`
-    db.query(don, function (err, result) {
-        if (err) res.send(err)
-        else res.send(result)
-    })
-});
-
-// Afficher les dons
-
-routes.get('/GetDon', function (req, res) {
-    let aff = `SELECT * FROM dons`
-    db.query(aff, function (err, result) {
-        // console.log(result)
-        if (err) console.log(err)
-        res.send(result)
-    })
-});
-
-// supprimer un don 
-
-routes.delete('/DeleteDon/:id', function (req, res) {
-    let del = `DELETE FROM dons WHERE id = ${req.params.id}`
-
-    db.query(del, function (err, result) {
-        if (err) throw err;
-        else res.send('bien supprimé')
-    })
-});
 
 module.exports = routes

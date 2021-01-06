@@ -4,7 +4,7 @@ import router from './route/routes'
 import Vuelidate from 'vuelidate'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import axios from 'axios'
-
+import store from './store/store'
 
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'
 import 'bootstrap/dist/css/bootstrap.css'
@@ -31,5 +31,6 @@ new Vue({
   router,
 
   render: h => h(App),
+  store: store
 }).$mount('#app')
 
